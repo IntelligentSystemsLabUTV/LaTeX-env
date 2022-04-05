@@ -24,7 +24,7 @@ services:
     working_dir: /home/latex/workspace
     volumes:
       - ~/.Xauthority:/home/latex/.Xauthority:rw
-      - ~/.ssh:/home/latex/.ssh:ro
+      - ~/.ssh:/home/latex/.ssh
       - ~/.gitconfig:/home/latex/.gitconfig
       - ./config/zsh_history:/home/latex/zsh_history
       - ./config/.aliases.sh:/home/latex/.aliases.sh
