@@ -1,0 +1,35 @@
+# Latex environment containers specification.
+#
+# Alessandro Tenaglia <alessandro.tenaglia42@gmail.com>
+# Roberto Masocco <robmasocco@gmail.com>
+#
+# April 5, 2022
+
+version: "3.9"
+
+services:
+  latex-env:
+    build:
+      context: ./
+      network: host
+    network_mode: "host"
+    environment:
+      TERM: xterm-256color
+      DISPLAY:
+      SHELL: /usr/bin/zsh
+    privileged: true
+    user: latex
+    stdin_open: false
+    tty: true
+    working_dir: /home/latex/workspace
+    volumes:
+      - ~/.Xauthority:/home/latex/.Xauthority:rw
+      - ~/.ssh:/home/latex/.ssh:ro
+      - ~/.gitconfig:/home/latex/.gitconfig
+      - ./config/zsh_history:/home/latex/zsh_history
+      - ./config/.aliases.sh:/home/latex/.aliases.sh
+      - ./config/.bashrc:/home/latex/.bashrc
+      - ./config/.nanorc:/home/latex/.nanorc
+      - ./config/.p10k.zsh:/home/latex/.p10k.zsh
+      - ./config/.zshrc:/home/latex/.zshrc
+      - ../:/home/latex/workspace
