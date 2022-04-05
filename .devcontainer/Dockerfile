@@ -1,0 +1,133 @@
+# LaTex environment
+#
+# Alessandro Tenaglia <alessandro.tenaglia42@gmail.com>
+# Roberto Masocco <robmasocco@gmail.com>
+#
+# April 5, 2022
+
+FROM ubuntu:20.04
+
+ARG USERNAME=latex
+ARG USER_UID=1000
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install basic utilities
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    apt-utils \
+    build-essential \
+    ca-certificates \
+    cpanminus \
+    curl \
+    gcc \
+    git \
+    git-man \
+    gnupg \
+    htop \
+    iproute2 \
+    less \
+    libc6-dev \
+    lsb-core \
+    lsb-release \
+    make \
+    nano \
+    python3 \
+    python3-pip \
+    procps \
+    screen \
+    software-properties-common \
+    ssh \
+    sudo \
+    wget && \
+    add-apt-repository universe && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*/apt/lists/*
+
+# Install language and locales
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    locales && \
+    locale-gen en_US.UTF-8 && \
+    update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*/apt/lists/*
+ENV LANG=en_US.UTF-8
+
+# Set up UTC timezone
+RUN ln -fs /usr/share/zoneinfo/UTC /etc/localtime && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends tzdata && \
+    dpkg-reconfigure --frontend noninteractive tzdata && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*/apt/lists/*
+
+# Install Zsh
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    zsh \
+    zsh-doc \
+    chroma && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*/apt/lists/*
+
+# Install TeXLive and utils
+RUN apt-get update && apt-get install -y \
+    texlive \
+    texlive-latex-extra \
+    texlive-extra-utils \
+    texlive-fonts-extra \
+    texlive-bibtex-extra \
+    texlive-science \
+    biber \
+    latexmk \
+    pandoc && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install latexindent dependencies
+RUN cpanm -n -q Log::Log4perl && \
+    cpanm -n -q XString && \
+    cpanm -n -q Log::Dispatch::File && \
+    cpanm -n -q YAML::Tiny && \
+    cpanm -n -q File::HomeDir && \
+    cpanm -n -q Unicode::GCString
+
+# Cleanup
+RUN apt-get autoremove -y && \
+    apt-get autoclean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*/apt/lists/*
+
+# Create a non-root sudo user with Zsh as shell
+RUN useradd -s /bin/bash --uid ${USER_UID} -m ${USERNAME} && \
+    echo ${USERNAME} ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/${USERNAME} && \
+    chmod 0440 /etc/sudoers.d/${USERNAME}
+ENV HOME=/home/${USERNAME}
+RUN chsh -s /usr/bin/zsh ${USERNAME}
+
+# Create workspace directory: host workspaces will be mounted here
+RUN mkdir ${HOME}/workspace && \
+    chown ${USERNAME} ${HOME}/workspace
+
+# Create shell history
+RUN mkdir ${HOME}/zsh_history && \
+    chown ${USERNAME} ${HOME}/zsh_history
+
+# Create SSH directory for user
+RUN mkdir ${HOME}/.ssh
+
+# Switch to internal user
+USER ${USERNAME}
+WORKDIR ${HOME}
+
+# Copy user configuration files
+COPY --chown=${USERNAME} ./config/.aliases.sh ./
+COPY --chown=${USERNAME} ./config/.bashrc ./
+COPY --chown=${USERNAME} ./config/.nanorc ./
+
+# Configure Zsh for internal user
+ENV ZSH=${HOME}/.oh-my-zsh
+ENV ZSH_CUSTOM=${ZSH}/custom
+ENV ZSH_PLUGINS=${ZSH_CUSTOM}/plugins
+ENV ZSH_THEMES=${ZSH_CUSTOM}/themes
+RUN wget -qO- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | zsh || true
+RUN git clone --single-branch --branch 'master' --depth 1 https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_PLUGINS}/zsh-syntax-highlighting \
+    && git clone --single-branch --branch 'master' --depth 1 https://github.com/zsh-users/zsh-autosuggestions ${ZSH_PLUGINS}/zsh-autosuggestions \
+    && git clone --single-branch --depth 1 https://github.com/romkatv/powerlevel10k.git ${ZSH_THEMES}/powerlevel10k
+COPY --chown=${USERNAME} ./config/.p10k.zsh ./
+COPY --chown=${USERNAME} ./config/.zshrc ./
+
+# Start shell in container
+CMD ["zsh"]
