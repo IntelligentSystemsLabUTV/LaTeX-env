@@ -1,5 +1,7 @@
-*
+# Ignore everything
+/*
+# Exceptions
 !.gitignore
-!.devcontainer
 !LICENSE
 !README.md
+!.devcontainer/
