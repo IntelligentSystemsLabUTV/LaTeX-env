@@ -12,6 +12,7 @@ services:
     build:
       context: ./
       network: host
+    image: latex-env:latest
     network_mode: "host"
     environment:
       TERM: xterm-256color
