@@ -30,12 +30,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     lsb-release \
     make \
     nano \
+    openssh-client \
     python3 \
     python3-pip \
     procps \
     screen \
     software-properties-common \
-    ssh \
     sudo \
     wget && \
     add-apt-repository universe && \
