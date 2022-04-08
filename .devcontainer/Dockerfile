@@ -35,6 +35,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     procps \
     screen \
     software-properties-common \
+    ssh \
     sudo \
     wget && \
     add-apt-repository universe && \
