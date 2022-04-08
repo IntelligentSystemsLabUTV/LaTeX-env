@@ -1,4 +1,4 @@
-# Sample Zsh configuration file optimized for development containers.
+# Sample Zsh configuration file optimized for development and containers.
 #
 # Roberto Masocco <robmasocco@gmail.com>
 # Alessandro Tenaglia <alessandro.tenaglia42@gmail.com>
@@ -11,12 +11,26 @@
 # Uncomment the following line to use case-sensitive completion.
 CASE_SENSITIVE="true"
 
-# This is where command history will be saved on the host
-export HISTFILE=~/zsh_history/.zsh_history
-if [[ ! -d ~/zsh_history ]]; then
-  mkdir -p ~/zsh_history
+# This is where command history will be saved
+if [[ -z "$BOARD" ]]; then
+  # Not in a container
+  export HISTFILE=~/.zsh_history
+else
+  # In a container: save it on the host
+  export HISTFILE=~/zsh_history/.zsh_history
+  if [[ ! -d ~/zsh_history ]]; then
+    mkdir -p ~/zsh_history
+  fi
 fi
 touch $HISTFILE
+
+# NuttX toolchain location (for development containers)
+if ! echo "$BOARD" | grep -q 'up' && ! echo "$BOARD" | grep -q 'nx'; then
+  export PATH=/opt/gcc-arm-none-eabi-9-2020-q2-update/bin:$PATH
+fi
+
+# Gradle location
+export PATH=/opt/gradle/gradle-$GRADLE_VERSION/bin:$PATH
 
 # If this is a login shell just set the prompt, basic stuff and get out
 if [[ "$TERM" == "linux" ]]; then
@@ -27,6 +41,10 @@ if [[ "$TERM" == "linux" ]]; then
     export EDITOR='nano'
   fi
   source ~/.aliases.sh
+  source ~/.ros2_cmds.sh
+  if [[ -f ~/.stanis_aliases.sh ]]; then
+    source ~/.stanis_aliases.sh
+  fi
   PROMPT='%B%F{red}%n@%M%f %F{yellow}%~%f %F{white}(%?%) $%f%b '
   return
 fi
@@ -128,6 +146,8 @@ fi
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 unalias rm
 [[ ! -f ~/.aliases.sh ]] || source $HOME/.aliases.sh
+[[ ! -f ~/.ros2_cmds.sh ]] || source $HOME/.ros2_cmds.sh
+[[ ! -f ~/.stanis_aliases.sh ]] || source ~/.stanis_aliases.sh
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

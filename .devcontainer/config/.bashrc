@@ -4,6 +4,14 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
+# NuttX toolchain location (for development containers)
+if ! echo "$BOARD" | grep -q 'up' && ! echo "$BOARD" | grep -q 'nx'; then
+  export PATH=/opt/gcc-arm-none-eabi-9-2020-q2-update/bin:$PATH
+fi
+
+# Gradle location
+export PATH=/opt/gradle/gradle-$GRADLE_VERSION/bin:$PATH
+
 # If not running interactively, don't do anything
 case $- in
 *i*) ;;
@@ -101,6 +109,16 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 # Additional aliases
 if [ -f ~/.aliases.sh ]; then
   . ~/.aliases.sh
+fi
+
+# ROS 2 aliases
+if [ -f ~/.ros2_cmds.sh ]; then
+  . ~/.ros2_cmds.sh
+fi
+
+# Drone aliases (for containers)
+if [ -f ~/.stanis_aliases.sh ]; then
+  . ~/.stanis_aliases.sh
 fi
 
 # enable programmable completion features (you don't need to enable
