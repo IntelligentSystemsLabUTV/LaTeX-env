@@ -1,4 +1,4 @@
-# LaTex environment
+# LaTeX environment.
 #
 # Alessandro Tenaglia <alessandro.tenaglia42@gmail.com>
 # Roberto Masocco <robmasocco@gmail.com>
