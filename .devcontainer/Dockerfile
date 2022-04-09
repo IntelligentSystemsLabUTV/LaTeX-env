@@ -74,7 +74,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     texlive-bibtex-extra \
     texlive-extra-utils \
     texlive-fonts-extra \
-    texlive-fonts-utils \
+    texlive-font-utils \
     texlive-latex-extra \
     texlive-science && \
     rm -rf /var/lib/apt/lists/*
