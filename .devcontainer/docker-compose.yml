@@ -18,7 +18,6 @@ services:
       TERM: xterm-256color
       DISPLAY:
       SHELL: /usr/bin/zsh
-    privileged: true
     user: latex
     stdin_open: false
     tty: true
