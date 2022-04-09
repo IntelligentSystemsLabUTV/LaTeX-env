@@ -64,20 +64,22 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*/apt/lists/*
 
 # Install TeXLive and utils
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     biber \
     cm-super \
+    inkscape \
     latexmk \
     pandoc \
     texlive \
     texlive-bibtex-extra \
     texlive-extra-utils \
     texlive-fonts-extra \
+    texlive-fonts-utils \
     texlive-latex-extra \
     texlive-science && \
     rm -rf /var/lib/apt/lists/*
 
-# Install latexindent dependencies
+# Install latexindent dependencies (Perl modules)
 RUN cpanm -n -q Log::Log4perl && \
     cpanm -n -q XString && \
     cpanm -n -q Log::Dispatch::File && \
