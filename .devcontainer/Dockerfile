@@ -63,10 +63,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     chroma && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*/apt/lists/*
 
-# Install TeXLive and utils
+# Install TeX Live and various TeX utilities
 RUN apt-get update && apt-get install -y --no-install-recommends \
     biber \
     cm-super \
+    ghostscript \
     inkscape \
     latexmk \
     pandoc \
