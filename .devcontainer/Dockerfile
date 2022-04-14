@@ -14,6 +14,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Install basic utilities
 RUN apt-get update && apt-get install -y --no-install-recommends \
     apt-utils \
+    build-essential \
     ca-certificates \
     cpanminus \
     curl \
@@ -21,6 +22,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gnupg \
     iproute2 \
     less \
+    make \
     openssh-client \
     openssl \
     python3 \
