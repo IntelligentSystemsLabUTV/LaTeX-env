@@ -63,6 +63,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ghostscript \
     inkscape \
     latexmk \
+    lmodern \
     pandoc \
     texlive \
     texlive-bibtex-extra \
