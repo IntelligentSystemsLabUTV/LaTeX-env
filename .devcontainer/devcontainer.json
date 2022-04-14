@@ -24,6 +24,8 @@
     "hediet.vscode-drawio",
   ],
   "settings": {
+    // Do not suggest words from written text (pretty annoying)
+    "editor.suggest.showWords": false,
     // Always wrap long lines
     "editor.wordWrap": "on",
     // Zsh
