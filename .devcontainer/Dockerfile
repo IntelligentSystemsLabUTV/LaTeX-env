@@ -89,7 +89,7 @@ RUN apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*/apt/lists/*
 
 # Create a non-root sudo user with Zsh as shell (psw: latexdev)
-RUN useradd -r -m -s /bin/bash -u ${USER_UID} -g root -G sudo -p "$(openssl passwd -1 latexdev)" latex && \
+RUN useradd -r -m -s /bin/bash -u ${USER_UID} -G sudo -p "$(openssl passwd -1 latexdev)" latex && \
     echo latex ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/latex && \
     chmod 0440 /etc/sudoers.d/latex
 ENV HOME=/home/latex
