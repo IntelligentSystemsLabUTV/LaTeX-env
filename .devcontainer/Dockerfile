@@ -31,6 +31,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     make \
     nano \
     openssh-client \
+    openssl \
     python3 \
     python3-pip \
     procps \
@@ -95,8 +96,8 @@ RUN apt-get autoremove -y && \
     apt-get autoclean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*/apt/lists/*
 
-# Create a non-root sudo user with Zsh as shell
-RUN useradd -s /bin/bash --uid ${USER_UID} -m latex && \
+# Create a non-root sudo user with Zsh as shell (psw: latexdev)
+RUN useradd -r -m -s /bin/bash -u ${USER_UID} -g root -G sudo -p "$(openssl passwd -1 latexdev)" latex && \
     echo latex ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/latex && \
     chmod 0440 /etc/sudoers.d/latex
 ENV HOME=/home/latex
@@ -106,7 +107,7 @@ RUN chsh -s /usr/bin/zsh latex
 RUN mkdir ${HOME}/workspace && \
     chown latex ${HOME}/workspace
 
-# Create shell history
+# Create shell history file
 RUN mkdir ${HOME}/zsh_history && \
     chown latex ${HOME}/zsh_history
 
