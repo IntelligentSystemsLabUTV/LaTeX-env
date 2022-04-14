@@ -115,10 +115,6 @@ COPY --chown=latex ./config/.aliases.sh ./
 COPY --chown=latex ./config/.bashrc ./
 COPY --chown=latex ./config/.nanorc ./
 
-# Copy VS Code configuration files for internal user
-RUN mkdir -p .config/Code/User
-COPY --chown=latex ./config/keybindings.json .config/Code/User/
-
 # Configure Zsh for internal user
 ENV ZSH=${HOME}/.oh-my-zsh
 ENV ZSH_CUSTOM=${ZSH}/custom
