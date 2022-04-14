@@ -77,6 +77,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     texlive-fonts-extra \
     texlive-font-utils \
     texlive-latex-extra \
+    texlive-plain-generic \
     texlive-science && \
     rm -rf /var/lib/apt/lists/*
 
