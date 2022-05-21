@@ -23,6 +23,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     iproute2 \
     less \
     make \
+    nano \
     openssh-client \
     openssl \
     python3 \
@@ -41,13 +42,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*/apt/lists/*
 ENV LANG=en_US.UTF-8
-
-# Set up UTC timezone
-RUN ln -fs /usr/share/zoneinfo/UTC /etc/localtime && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends tzdata && \
-    dpkg-reconfigure --frontend noninteractive tzdata && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*/apt/lists/*
 
 # Install Zsh
 RUN apt-get update && apt-get install -y --no-install-recommends \
