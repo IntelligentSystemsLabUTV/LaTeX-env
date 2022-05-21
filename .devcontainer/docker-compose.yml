@@ -26,4 +26,5 @@ services:
       - ~/.Xauthority:/home/latex/.Xauthority:rw
       - ~/.ssh:/home/latex/.ssh
       - ~/.gitconfig:/home/latex/.gitconfig
+      - /etc/localtime:/etc/localtime:ro
       - ../:/home/latex/workspace
