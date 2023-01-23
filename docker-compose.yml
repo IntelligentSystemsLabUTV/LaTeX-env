@@ -10,16 +10,16 @@ version: '3.9'
 services:
   latex-env:
     build:
-      context: ./config
-      dockerfile: ./Dockerfile.env
+      context: .
+      dockerfile: Dockerfile.env
       args:
         - USER_UID=1000
     image: intelligentsystemslabutv/latex-env:latest
 
   latex-dev:
     build:
-      context: ./config
-      dockerfile: ./Dockerfile.dev
+      context: .
+      dockerfile: Dockerfile.dev
       args:
         - USER_UID=1000
     image: intelligentsystemslabutv/latex-env:dev
