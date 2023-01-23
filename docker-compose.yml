@@ -1,0 +1,25 @@
+# LaTeX environment images specification.
+#
+# Alessandro Tenaglia <alessandro.tenaglia42@gmail.com>
+# Roberto Masocco <robmasocco@gmail.com>
+#
+# January 23, 2023
+
+version: '3.9'
+
+services:
+  latex-env:
+    build:
+      context: ./config
+      dockerfile: ./Dockerfile.env
+      args:
+        - USER_UID=1000
+    image: intelligentsystemslabutv/latex-env:latest
+
+  latex-dev:
+    build:
+      context: ./config
+      dockerfile: ./Dockerfile.dev
+      args:
+        - USER_UID=1000
+    image: intelligentsystemslabutv/latex-env:dev
