@@ -23,3 +23,4 @@ services:
       args:
         - USER_UID=1000
     image: intelligentsystemslabutv/latex-env:dev
+    command: ["/bin/bash", "-c", "trap 'exit 0' TERM; sleep infinity & wait"]
