@@ -89,7 +89,7 @@ RUN apt-get autoremove -y && \
 # Create a user with Zsh as shell, encrypted password, and add it to the sudoers
 # To generate the encrypted password, run:
 #   mkpasswd -m sha-512 -S intelsyslab PASSWORD
-RUN useradd -r -m -s /bin/bash -u ${USER_UID} -G sudo -p '$6$intelsyslab$PUd0CRyl4DBEX7qzB22cOiZigwqsmGRhTBGhXuhNgQrvqq1a87aDyw7giY7Q3lNOr3ZWmVTjWUx1Fxwlxy1an.' latex
+RUN useradd -r -m -s /bin/bash -u ${USER_UID} -G sudo -p '$6$intelsyslab$ii58HVgBLe7mbaf8WsIKZbIELvdHQXgt90KOJQHFlxkdYlNkHsvDJMHAIq53sk0m2gVw2hfWvDfS7brUNYn8T.' latex
 ENV HOME=/home/latex
 RUN chsh -s /usr/bin/zsh latex
 
