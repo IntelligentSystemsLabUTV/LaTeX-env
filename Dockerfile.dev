@@ -125,5 +125,7 @@ RUN git clone --single-branch --branch 'master' --depth 1 https://github.com/zsh
 COPY --chown=latex ./config/.p10k.zsh ./
 COPY --chown=latex ./config/.zshrc ./
 
+ENV DEBIAN_FRONTEND=dialog
+
 # Start shell in container
 CMD ["zsh"]
