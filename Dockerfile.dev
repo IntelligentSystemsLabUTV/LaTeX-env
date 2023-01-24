@@ -1,0 +1,127 @@
+# LaTeX environment development image.
+#
+# Alessandro Tenaglia <alessandro.tenaglia42@gmail.com>
+# Roberto Masocco <robmasocco@gmail.com>
+#
+# January 24, 2023
+
+FROM ubuntu:22.04
+
+ARG USER_UID=1000
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install basic utilities
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    apt-utils \
+    ca-certificates \
+    cpanminus \
+    curl \
+    git \
+    gnupg \
+    htop \
+    iproute2 \
+    less \
+    nano \
+    openssh-client \
+    openssl \
+    procps \
+    python3 \
+    software-properties-common \
+    wget && \
+    add-apt-repository universe && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*/apt/lists/*
+
+# Install language and locales
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    locales && \
+    locale-gen en_US.UTF-8 && \
+    update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*/apt/lists/*
+ENV LANG=en_US.UTF-8
+
+# Install Zsh
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3-pygments \
+    zsh \
+    zsh-doc && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*/apt/lists/*
+
+# Install TeX Live and various TeX utilities
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    biber \
+    build-essential \
+    cm-super \
+    ghostscript \
+    inkscape \
+    latexmk \
+    lmodern \
+    make \
+    pandoc \
+    sudo \
+    tex-gyre \
+    texlive \
+    texlive-bibtex-extra \
+    texlive-extra-utils \
+    texlive-fonts-extra \
+    texlive-font-utils \
+    texlive-lang-english \
+    texlive-lang-italian \
+    texlive-latex-extra \
+    texlive-latex-recommended \
+    texlive-plain-generic \
+    texlive-science && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install latexindent dependencies (Perl modules)
+RUN cpanm -n -q Log::Log4perl && \
+    cpanm -n -q XString && \
+    cpanm -n -q Log::Dispatch::File && \
+    cpanm -n -q YAML::Tiny && \
+    cpanm -n -q File::HomeDir && \
+    cpanm -n -q Unicode::GCString
+
+# Cleanup
+RUN apt-get autoremove -y && \
+    apt-get autoclean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*/apt/lists/*
+
+# Create a user with Zsh as shell and add it to the sudoers
+RUN useradd -r -m -s /bin/bash -u ${USER_UID} -G sudo -p '$6$UAr4WjiVe7QBnRL4$25Jx4iz6vNicrmBfioGayu7L.6jIOTRCXWi.dsuGfY4WCmCG69dqXiuYlG2QkoJg16lsp0YoxaxnLYA2aguvK/' latex
+ENV HOME=/home/latex
+RUN chsh -s /usr/bin/zsh latex
+
+# Create workspace directory: host workspaces will be mounted here
+RUN mkdir ${HOME}/workspace && \
+    chown latex ${HOME}/workspace
+
+# Create shell history file
+RUN mkdir ${HOME}/zsh_history && \
+    chown latex ${HOME}/zsh_history
+
+# Create SSH directory for user
+RUN mkdir ${HOME}/.ssh
+
+# Switch to internal user
+USER latex
+WORKDIR ${HOME}
+
+# Copy user configuration files
+COPY --chown=latex ./config/.aliases.sh ./
+COPY --chown=latex ./config/.bashrc ./
+COPY --chown=latex ./config/.nanorc ./
+
+# Configure Zsh for internal user
+ENV ZSH=${HOME}/.oh-my-zsh
+ENV ZSH_CUSTOM=${ZSH}/custom
+ENV ZSH_PLUGINS=${ZSH_CUSTOM}/plugins
+ENV ZSH_THEMES=${ZSH_CUSTOM}/themes
+RUN wget -qO- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | zsh || true
+RUN git clone --single-branch --branch 'master' --depth 1 https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_PLUGINS}/zsh-syntax-highlighting \
+    && git clone --single-branch --branch 'master' --depth 1 https://github.com/zsh-users/zsh-autosuggestions ${ZSH_PLUGINS}/zsh-autosuggestions \
+    && git clone --single-branch --depth 1 https://github.com/romkatv/powerlevel10k.git ${ZSH_THEMES}/powerlevel10k
+COPY --chown=latex ./config/.p10k.zsh ./
+COPY --chown=latex ./config/.zshrc ./
+
+# Start shell in container
+CMD ["zsh"]
