@@ -23,4 +23,7 @@ services:
       args:
         - USER_UID=1000
     image: intelligentsystemslabutv/latex-env:dev
+    environment:
+      TERM: xterm-256color
+      SHELL: /usr/bin/zsh
     command: ["/bin/bash", "-c", "trap 'exit 0' TERM; sleep infinity & wait"]
