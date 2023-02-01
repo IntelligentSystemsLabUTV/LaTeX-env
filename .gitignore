@@ -1,0 +1,2 @@
+# Avoid to push local VS Code settings
+.vscode/
