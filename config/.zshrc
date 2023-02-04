@@ -1,10 +1,3 @@
-# Sample Zsh configuration file optimized for development and containers.
-#
-# Roberto Masocco <robmasocco@gmail.com>
-# Alessandro Tenaglia <alessandro.tenaglia42@gmail.com>
-#
-# January 27, 2022
-
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
@@ -23,31 +16,6 @@ else
   fi
 fi
 touch $HISTFILE
-
-# NuttX toolchain location (for development containers)
-if ! echo "$BOARD" | grep -q 'up' && ! echo "$BOARD" | grep -q 'nx'; then
-  export PATH=/opt/gcc-arm-none-eabi-9-2020-q2-update/bin:$PATH
-fi
-
-# Gradle location
-export PATH=/opt/gradle/gradle-$GRADLE_VERSION/bin:$PATH
-
-# If this is a login shell just set the prompt, basic stuff and get out
-if [[ "$TERM" == "linux" ]]; then
-  export LANG=en_US.UTF-8
-  if [[ -n $SSH_CONNECTION ]]; then
-    export EDITOR='vim'
-  else
-    export EDITOR='nano'
-  fi
-  source ~/.aliases.sh
-  source ~/.ros2_cmds.sh
-  if [[ -f ~/.stanis_aliases.sh ]]; then
-    source ~/.stanis_aliases.sh
-  fi
-  PROMPT='%B%F{red}%n@%M%f %F{yellow}%~%f %F{white}(%?%) $%f%b '
-  return
-fi
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -146,8 +114,6 @@ fi
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 unalias rm
 [[ ! -f ~/.aliases.sh ]] || source $HOME/.aliases.sh
-[[ ! -f ~/.ros2_cmds.sh ]] || source $HOME/.ros2_cmds.sh
-[[ ! -f ~/.stanis_aliases.sh ]] || source ~/.stanis_aliases.sh
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
