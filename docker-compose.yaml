@@ -3,27 +3,35 @@
 # Alessandro Tenaglia <alessandro.tenaglia42@gmail.com>
 # Roberto Masocco <robmasocco@gmail.com>
 #
-# January 23, 2023
-
-version: '3.9'
+# April 21, 2026
 
 services:
   latex-env:
     build:
       context: .
       dockerfile: Dockerfile.env
+      network: host
       args:
         - USER_UID=1000
     image: intelligentsystemslabutv/latex-env:latest
+    environment:
+      TERM: xterm-256color
+      SHELL: /usr/bin/zsh
+    user: latex
+    init: true
+    command: ["/bin/bash", "-c", "trap 'exit 0' TERM; sleep infinity & wait"]
 
   latex-env-dev:
     build:
       context: .
       dockerfile: Dockerfile.dev
+      network: host
       args:
         - USER_UID=1000
     image: intelligentsystemslabutv/latex-env:dev
     environment:
       TERM: xterm-256color
       SHELL: /usr/bin/zsh
+    user: latex
+    init: true
     command: ["/bin/bash", "-c", "trap 'exit 0' TERM; sleep infinity & wait"]
